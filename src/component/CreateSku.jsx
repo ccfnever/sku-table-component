@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 // import { connect } from 'dva'
-import { Form, Icon, Input, Select, Button, Row, Col, Checkbox } from 'antd'
+import { Form, Icon, Input, Select, Button, Row, Col, Checkbox, message } from 'antd'
 // import { addSkuAttribute } from '../services/addGoodsApi'
 
 import goodsStyle from '../style/index.less'
@@ -95,6 +95,7 @@ const CreateSku = props => {
   function addSpec() {
     // eslint-disable-next-line no-plusplus
     const id = specIndex++
+    // debugger
     setSpecList(specList.concat([{ id }]))
   }
 
@@ -127,9 +128,13 @@ const CreateSku = props => {
     const pValue = specList[index].value
     const { specId } = specList[index]
 
-    if (!value) return
+    if (!value) {
+      message.error('请输入规格属性')
+      return
+    }
     const CurrntSubSpecList = specList[index].subSpecList || []
     const isRepetition = CurrntSubSpecList.filter(c => c.value === value).length > 0
+
     if (isRepetition) return
     const result = await addSkuAttribute({
       attributeId: specId,
@@ -176,6 +181,7 @@ const CreateSku = props => {
 
   function handleChecked(e) {
     setHasMainImg(e.target.checked)
+    debugger
     if (!specList[0].subSpecList) return
     // eslint-disable-next-line no-plusplus
     for (let i; i < specList[0].subSpecList.length; i++) {
